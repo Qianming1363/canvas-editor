@@ -16,11 +16,15 @@ onMounted(() => {
     return
   }
 
-  const rectList = []
+  // const rectList = []
 
   let startX = 0;
   let startY = 0;
   let isDraw = false
+  let endX = 0;
+  let endY = 0;
+
+  let img = new Image();
 
   const mouseDown = (e: MouseEvent) => {
     e.preventDefault()
@@ -28,21 +32,24 @@ onMounted(() => {
     startX = e.clientX
     startY = e.clientY
     isDraw = true
+    img.src = can.toDataURL()
   }
 
   const mouseMove = (e: MouseEvent) => {
     if (!isDraw) return
-    const curX = e.clientX
-    const curY = e.clientY
     ctx.clearRect(0, 0, can.width, can.height)
+    ctx.drawImage(img, 0, 0, can.width, can.height);
+    endX = e.clientX
+    endY = e.clientY
     ctx.strokeStyle = "#333333"
-    ctx.strokeRect(startX, startY, curX - startX, curY - startY)
-
+    ctx.strokeRect(startX, startY, endX - startX, endY - startY)
   }
 
   const mouseUp = (e: MouseEvent) => {
     console.log(e)
     isDraw = false
+    // 保存rect数据
+    // 删除背景
   }
 
   can.addEventListener("mousedown", mouseDown)
