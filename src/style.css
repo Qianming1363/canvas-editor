@@ -5,6 +5,10 @@
 html, body {
   height: 100vh;
 }
+#app{
+  display: inline-block;
+}
 ::-webkit-scrollbar {
+  width: 0;
   display: none;
 }

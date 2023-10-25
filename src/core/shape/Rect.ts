@@ -12,6 +12,10 @@ export class Rect {
     this.endY = endY
   }
 
+  draw() {
+
+  }
+
   toJSON() {
 
   }

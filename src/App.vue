@@ -56,21 +56,19 @@ onMounted(() => {
   can.addEventListener("mousemove", mouseMove)
   can.addEventListener("mouseup", mouseUp)
 
-
-
-
-
-
-
 })
 
 
 
 </script>
 <template>
-  <div>
-    <canvas ref="canvas"></canvas>
-  </div>
+  <canvas class="canvas" ref="canvas"></canvas>
 </template>
 
-<style scoped></style>
+<style scoped>
+.canvas {
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+</style>
