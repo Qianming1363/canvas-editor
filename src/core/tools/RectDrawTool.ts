@@ -16,6 +16,7 @@ export class RectDrawTool extends Tool {
 
   public mouseDown = (e: MouseEvent) => {
     e.preventDefault()
+    if (e.buttons !== 1) return
     this.startX = e.clientX
     this.startY = e.clientY
     this.isDraw = true
@@ -34,8 +35,10 @@ export class RectDrawTool extends Tool {
 
   public mouseUp = (e: MouseEvent) => {
     // 保存数据，结束绘制
+    if (!this.isDraw) return
     this.isDraw = false
-    this.data.rectList.push(new Rect(this.startX, this.startY, this.endX, this.endY))
+    const { x, y } = this.data.getOffset()
+    this.data.rectList.push(new Rect(this.startX - x, this.startY - y, this.endX - x, this.endY - y))
     this.data.renderAll()
     this.data.persist()
   }

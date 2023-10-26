@@ -7,7 +7,6 @@ console.log(canvas)
 let editor: Editor;
 
 onMounted(() => {
-
   const can = canvas.value as HTMLCanvasElement
   can.width = document.body.clientWidth
   can.height = document.body.clientHeight
@@ -49,6 +48,7 @@ const clear = () => {
   transform: translate(-50%);
   display: flex;
   align-items: center;
+  background-color: #FFF;
 }
 
 button {

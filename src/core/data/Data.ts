@@ -7,6 +7,9 @@ export class Data {
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
 
+  private offsetX = 0;
+  private offsetY = 0;
+
   constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
     this.ctx = ctx
     this.canvas = canvas
@@ -14,14 +17,29 @@ export class Data {
     if (jsonString) {
       const obj = JSON.parse(jsonString)
       this.rectList = obj.rectList
+      this.renderAll()
     }
   }
 
+
+  getOffset() {
+    return {
+      x: this.offsetX,
+      y: this.offsetY
+    }
+  }
+
+  setOffset(x: number, y: number) {
+    this.offsetX = x
+    this.offsetY = y
+    this.renderAll()
+  }
+
   renderAll() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+    this.ctx.clearRect(-10000, -10000, this.canvas.width * 100, this.canvas.height * 100)
     this.rectList.forEach((rect: Rect) => {
       this.ctx.strokeStyle = "#333333"
-      this.ctx.strokeRect(rect.startX, rect.startY, rect.endX - rect.startX, rect.endY - rect.startY)
+      this.ctx.strokeRect(rect.startX + this.offsetX, rect.startY + this.offsetY, rect.endX - rect.startX, rect.endY - rect.startY)
     })
   }
 
