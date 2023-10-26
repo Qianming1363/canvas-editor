@@ -2,6 +2,13 @@
 import { onMounted, ref } from "vue"
 const canvas = ref<HTMLCanvasElement>()
 console.log(canvas)
+let rectList: Array<number[]> = []
+let ctx: any
+const renderAll = () => {
+  rectList.forEach(p => {
+    ctx.strokeRect(p[0], p[1], p[2] - p[0], p[3] - p[1])
+  })
+}
 
 onMounted(() => {
 
@@ -10,13 +17,20 @@ onMounted(() => {
   can.width = document.body.clientWidth
   can.height = document.body.clientHeight
 
-  const ctx = can.getContext('2d');
+  ctx = can.getContext('2d');
   if (!ctx) {
     console.log("无法获取canvas上下文")
     return
   }
 
-  // const rectList = []
+
+  const data = localStorage.getItem("rectList")
+  if (data) {
+    rectList = JSON.parse(data)
+    renderAll()
+  } else {
+    console.log("未发现保存数据")
+  }
 
   let startX = 0;
   let startY = 0;
@@ -28,7 +42,6 @@ onMounted(() => {
 
   const mouseDown = (e: MouseEvent) => {
     e.preventDefault()
-    console.log(e.clientX, e.clientY)
     startX = e.clientX
     startY = e.clientY
     isDraw = true
@@ -49,7 +62,14 @@ onMounted(() => {
     console.log(e)
     isDraw = false
     // 保存rect数据
-    // 删除背景
+    rectList.push([startX, startY, endX, endY])
+    console.log(rectList)
+    ctx.clearRect(0, 0, can.width, can.height)
+    // 绘制所有矩形
+    renderAll()
+
+    localStorage.setItem("rectList", JSON.stringify(rectList))
+
   }
 
   can.addEventListener("mousedown", mouseDown)
@@ -59,10 +79,21 @@ onMounted(() => {
 })
 
 
+const clear = () => {
+  rectList = []
+  ctx.clearRect(0, 0, 3000, 3000)
+}
+
 
 </script>
 <template>
   <canvas class="canvas" ref="canvas"></canvas>
+  <div class="top-bar">
+    <button @click="clear">清除</button>
+    <button>保存</button>
+    <button>矩形</button>
+    <button></button>
+  </div>
 </template>
 
 <style scoped>
@@ -70,5 +101,28 @@ onMounted(() => {
   position: fixed;
   left: 0;
   top: 0;
+}
+
+.top-bar {
+  position: fixed;
+  top: 18px;
+  width: 1000px;
+  height: 64px;
+  z-index: 10;
+  box-shadow: rgba(0, 0, 0, 0.2) 0 0 10px;
+  border-radius: 12px;
+  left: 50%;
+  transform: translate(-50%);
+  display: flex;
+  align-items: center;
+}
+
+button {
+  height: 40px;
+  width: 40px;
+  margin-left: 30px;
+  background-color: #CCC;
+  border-radius: 8px;
+  cursor: pointer;
 }
 </style>
