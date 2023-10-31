@@ -38,7 +38,14 @@ export class RectDrawTool extends Tool {
     if (!this.isDraw) return
     this.isDraw = false
     const { x, y } = this.data.getOffset()
-    this.data.rectList.push(new Rect(this.startX - x, this.startY - y, this.endX - x, this.endY - y))
+
+    const scale = this.data.getScale()
+    // 计算scale  
+    const startX = this.startX - x * scale
+    const startY = this.startY - y * scale
+    const { x: sx, y: sy } = this.data.reverseScale(startX, startY)
+    const { x: ex, y: ey } = this.data.reverseScale(this.endX - x * scale, this.endY - y * scale)
+    this.data.rectList.push(new Rect(sx, sy, ex, ey))
     this.data.renderAll()
     this.data.persist()
   }

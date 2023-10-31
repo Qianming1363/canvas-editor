@@ -1,3 +1,4 @@
+import { ZoomControl } from './../control/ZoomControl';
 import { DragControl } from "../control/DragControl"
 import { Data } from "../data/Data"
 import { RectDrawTool } from "../tools/RectDrawTool"
@@ -38,7 +39,6 @@ export class Editor {
     document.addEventListener("contextmenu", (e: MouseEvent) => {
       e.preventDefault()
     })
-
 
   }
 

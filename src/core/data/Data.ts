@@ -10,6 +10,8 @@ export class Data {
   private offsetX = 0;
   private offsetY = 0;
 
+  private scale = 1;
+
   constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
     this.ctx = ctx
     this.canvas = canvas
@@ -36,11 +38,47 @@ export class Data {
   }
 
   renderAll() {
-    this.ctx.clearRect(-10000, -10000, this.canvas.width * 100, this.canvas.height * 100)
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     this.rectList.forEach((rect: Rect) => {
       this.ctx.strokeStyle = "#333333"
-      this.ctx.strokeRect(rect.startX + this.offsetX, rect.startY + this.offsetY, rect.endX - rect.startX, rect.endY - rect.startY)
+      this.ctx.lineWidth = 2 * this.scale
+      let startX = rect.startX + this.offsetX
+      let startY = rect.startY + this.offsetY
+      let width = rect.endX - rect.startX
+      let height = rect.endY - rect.startY
+      let { x: sx, y: sy } = this.computeScale(startX, startY)
+      // let { x: w, y: h } = this.computeScale(width, height)
+      this.ctx.strokeRect(sx, sy, width * this.scale, height * this.scale)
     })
+  }
+
+
+  public getScale() {
+    return this.scale
+  }
+
+  public setScale(val: number) {
+    this.scale = val
+    this.renderAll()
+  }
+
+  public computeScale(x: number, y: number) {
+    const width = this.canvas.width / 2
+    const height = this.canvas.height / 2
+    return {
+      x: (x - width) * this.scale + width,
+      y: (y - height) * this.scale + height
+    }
+  }
+
+  // 缩放后坐标还原
+  public reverseScale(x: number, y: number) {
+    const width = this.canvas.width / 2
+    const height = this.canvas.height / 2
+    return {
+      x: (x - width) / this.scale + width,
+      y: (y - height) / this.scale + height
+    }
   }
 
   persist() {
