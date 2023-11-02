@@ -11,7 +11,6 @@ onMounted(() => {
   can.width = document.body.clientWidth
   can.height = document.body.clientHeight
   editor = new Editor(can)
-  editor.initMouseEvenet()
 })
 
 const clear = () => {
@@ -23,8 +22,12 @@ const clear = () => {
   <canvas class="canvas" ref="canvas"></canvas>
   <div class="top-bar">
     <button @click="clear">清除</button>
-    <button>保存</button>
+    <button>撤销</button>
+    <button>取消</button>
+    <button>线段</button>
     <button>矩形</button>
+    <button>多边形</button>
+    <button>圆</button>
     <button></button>
   </div>
 </template>

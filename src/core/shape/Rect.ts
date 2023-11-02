@@ -12,5 +12,9 @@ export class Rect {
     this.endY = endY
   }
 
+  render() {
+
+  }
+
 
 }
