@@ -10,6 +10,8 @@ export class RectDrawTool extends Tool {
   private endY = 0;
   private isDraw = false
 
+  private isMove = false
+
   constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, data: Data) {
     super(ctx, canvas, data)
   }
@@ -25,6 +27,7 @@ export class RectDrawTool extends Tool {
 
   public mouseMove = (e: MouseEvent) => {
     if (!this.isDraw) return
+    this.isMove = true
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     super.drawImg()
     this.endX = e.clientX
@@ -37,6 +40,8 @@ export class RectDrawTool extends Tool {
     // 保存数据，结束绘制
     if (!this.isDraw) return
     this.isDraw = false
+    if (!this.isMove) return
+    this.isMove = false
     const { x, y } = this.data.getOffset()
 
     const scale = this.data.getScale()

@@ -28,15 +28,17 @@ export class DragControl {
     if (e.buttons !== 2) return
     this.isDrag = true
     const { x, y } = this.data.getOffset()
-    this.startX = e.clientX - x
-    this.startY = e.clientY - y
+    const scale = this.data.getScale()
+    this.startX = (e.clientX - x * scale)
+    this.startY = (e.clientY - y * scale)
   }
 
 
   mouseMove(e: MouseEvent) {
     if (!this.isDrag) return
-    let offsetX = (e.clientX - this.startX)
-    let offsetY = (e.clientY - this.startY)
+    const scale = this.data.getScale()
+    let offsetX = (e.clientX - this.startX) / scale
+    let offsetY = (e.clientY - this.startY) / scale
     this.data.setOffset(offsetX, offsetY)
   }
 
