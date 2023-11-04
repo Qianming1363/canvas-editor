@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Editor } from "./core/editor/Editor";
 import { onMounted, ref } from "vue"
+import { Mode } from "./core/editor/Mode";
 const canvas = ref<HTMLCanvasElement>()
 console.log(canvas)
 
@@ -17,6 +18,10 @@ const clear = () => {
   editor.clear()
 }
 
+const switchMode = (mode: Mode) => {
+  editor.setDrawMode(mode)
+}
+
 </script>
 <template>
   <canvas class="canvas" ref="canvas"></canvas>
@@ -24,8 +29,8 @@ const clear = () => {
     <button @click="clear">清除</button>
     <button>撤销</button>
     <button>取消</button>
-    <button>线段</button>
-    <button>矩形</button>
+    <button @click="switchMode(Mode.POLYLINE)">线段</button>
+    <button @click="switchMode(Mode.RECT)">矩形</button>
     <button>多边形</button>
     <button>圆</button>
     <button></button>

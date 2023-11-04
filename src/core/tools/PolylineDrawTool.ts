@@ -1,5 +1,6 @@
 import { Tool } from "./Tool";
 import { Data } from "../data/Data";
+import { Polylline } from "../shape/Polyline";
 
 
 export class PolylineDrawTool extends Tool {
@@ -14,18 +15,19 @@ export class PolylineDrawTool extends Tool {
   }
 
   public mouseDown = (e: MouseEvent) => {
-    if (e.buttons === 2) {
+    if (e.button === 2) {
       this.isDrawing = false
-      console.log(this.points)
       return
     }
     this.isDrawing = true
 
     this.currentX = e.clientX
     this.currentY = e.clientY
-    this.points.push(this.currentX, this.currentY)
-    this.saveImg()
+    if (this.points.length === 0) {
+      this.points.push(this.currentX, this.currentY)
 
+    }
+    this.saveImg()
   }
 
 
@@ -46,7 +48,19 @@ export class PolylineDrawTool extends Tool {
   }
 
   public mouseUp = (e: MouseEvent) => {
-
+    this.currentX = e.clientX
+    this.currentY = e.clientY
+    if (e.button === 2) {
+      this.isDrawing = false
+      this.data.polylineList.push(new Polylline(this.points))
+      this.points = []
+      this.data.renderAll()
+      this.data.persist()
+      return
+    }
+    if (this.points.length !== 0) {
+      this.points.push(this.currentX, this.currentY)
+    }
   }
 
 

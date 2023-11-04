@@ -1,8 +1,10 @@
+import { Polylline } from "../shape/Polyline";
 import { Rect } from "../shape/Rect";
 
 export class Data {
 
   public rectList: Rect[] = []
+  public polylineList: Polylline[] = [];
 
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
@@ -18,7 +20,7 @@ export class Data {
     const jsonString = localStorage.getItem("editor-data")
     if (jsonString) {
       const obj = JSON.parse(jsonString)
-      this.rectList = obj.rectList
+      Object.assign(this, obj)
       this.renderAll()
     }
   }
@@ -39,17 +41,28 @@ export class Data {
 
   renderAll() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    this.rectList.forEach((rect: Rect) => {
-      this.ctx.strokeStyle = "#333333"
-      this.ctx.lineWidth = 2 * this.scale
-      let startX = rect.startX + this.offsetX
-      let startY = rect.startY + this.offsetY
-      let width = rect.endX - rect.startX
-      let height = rect.endY - rect.startY
-      let { x: sx, y: sy } = this.computeScale(startX, startY)
-      // let { x: w, y: h } = this.computeScale(width, height)
-      this.ctx.strokeRect(sx, sy, width * this.scale, height * this.scale)
-    })
+    this.rectList.forEach(this.renderRect.bind(this))
+    this.polylineList.forEach(this.renderPolyline.bind(this))
+  }
+
+  private renderRect(rect: Rect) {
+    this.ctx.strokeStyle = "#333333"
+    this.ctx.lineWidth = 2 * this.scale
+    let startX = rect.startX + this.offsetX
+    let startY = rect.startY + this.offsetY
+    let width = rect.endX - rect.startX
+    let height = rect.endY - rect.startY
+    let { x: sx, y: sy } = this.computeScale(startX, startY)
+    this.ctx.strokeRect(sx, sy, width * this.scale, height * this.scale)
+  }
+
+  private renderPolyline(polyline: Polylline) {
+    this.ctx.beginPath();
+    this.ctx.moveTo(polyline.points[0], polyline.points[1]);
+    for (let i = 1; i < polyline.points.length / 2; i++) {
+      this.ctx.lineTo(polyline.points[i * 2], polyline.points[i * 2 + 1])
+    }
+    this.ctx.stroke()
   }
 
 
@@ -87,7 +100,8 @@ export class Data {
 
   toJSON() {
     const obj = {
-      rectList: this.rectList
+      rectList: this.rectList,
+      polylineList: this.polylineList
     }
     return JSON.stringify(obj)
   }

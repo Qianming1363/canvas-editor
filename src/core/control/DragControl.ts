@@ -25,7 +25,7 @@ export class DragControl {
   }
 
   mouseDown(e: MouseEvent) {
-    if (e.buttons !== 2) return
+    if (e.button !== 2) return
     this.isDrag = true
     const { x, y } = this.data.getOffset()
     const scale = this.data.getScale()
