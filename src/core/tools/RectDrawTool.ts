@@ -18,7 +18,7 @@ export class RectDrawTool extends Tool {
 
   public mouseDown = (e: MouseEvent) => {
     e.preventDefault()
-    if (e.button !== 1) return
+    if (e.button !== 0) return
     this.startX = e.clientX
     this.startY = e.clientY
     this.isDraw = true
