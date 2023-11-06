@@ -1,10 +1,19 @@
+import { Vector2 } from "../math/Vector2"
+
 export class Polylline {
 
 
-  public points: number[]
+  public points: Vector2[]
 
-  constructor(points: number[]) {
-    this.points = points
+  constructor(points: Vector2[]) {
+
+    this.points = points.map((e: Vector2 | any) => {
+      if (e instanceof Vector2) {
+        return new Vector2(e.x, e.y)
+      } else {
+        return new Vector2(e.px, e.py)
+      }
+    })
   }
 
 

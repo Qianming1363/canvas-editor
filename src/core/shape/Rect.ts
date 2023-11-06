@@ -1,15 +1,18 @@
+import { Vector2 } from "../math/Vector2"
+
 export class Rect {
 
-  startX: number
-  startY: number
-  endX: number
-  endY: number
+  public points: Vector2[]
 
-  constructor(startX: number, startY: number, endX: number, endY: number) {
-    this.startX = startX
-    this.startY = startY
-    this.endX = endX
-    this.endY = endY
+  constructor(points: Vector2[]) {
+
+    this.points = points.map((e: Vector2 | any) => {
+      if (e instanceof Vector2) {
+        return new Vector2(e.x, e.y)
+      } else {
+        return new Vector2(e.px, e.py)
+      }
+    })
   }
 
   render() {

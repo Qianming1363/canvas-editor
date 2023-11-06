@@ -1,13 +1,12 @@
 import { Data } from "../data/Data";
+import { Vector2 } from "../math/Vector2";
 import { Rect } from "../shape/Rect";
 import { Tool } from "./Tool";
 
 export class RectDrawTool extends Tool {
 
-  private startX = 0;
-  private startY = 0;
-  private endX = 0;
-  private endY = 0;
+  private startPoint = new Vector2();
+  private points: Vector2[] = []
   private isDraw = false
 
   private isMove = false
@@ -19,8 +18,8 @@ export class RectDrawTool extends Tool {
   public mouseDown = (e: MouseEvent) => {
     e.preventDefault()
     if (e.button !== 0) return
-    this.startX = e.clientX
-    this.startY = e.clientY
+    this.startPoint.x = e.clientX
+    this.startPoint.y = e.clientY
     this.isDraw = true
     super.saveImg()
   }
@@ -30,10 +29,15 @@ export class RectDrawTool extends Tool {
     this.isMove = true
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     super.drawImg()
-    this.endX = e.clientX
-    this.endY = e.clientY
+    const end = new Vector2(e.clientX, e.clientY)
+    const points = this.getRectPoints(this.startPoint, end)
     this.ctx.strokeStyle = "#333333"
-    this.ctx.strokeRect(this.startX, this.startY, this.endX - this.startX, this.endY - this.startY)
+    this.ctx.beginPath()
+    points.forEach((v: Vector2, index: number) => {
+      index === 0 ? this.ctx.moveTo(v.x, v.y) : this.ctx.lineTo(v.x, v.y)
+    })
+    this.points = points;
+    this.ctx.stroke()
   }
 
   public mouseUp = (e: MouseEvent) => {
@@ -42,17 +46,24 @@ export class RectDrawTool extends Tool {
     this.isDraw = false
     if (!this.isMove) return
     this.isMove = false
-    const { x, y } = this.data.getOffset()
 
+    const half = this.data.getHalf()
     const scale = this.data.getScale()
-    // 计算scale  
-    const startX = this.startX - x * scale
-    const startY = this.startY - y * scale
-    const { x: sx, y: sy } = this.data.reverseScale(startX, startY)
-    const { x: ex, y: ey } = this.data.reverseScale(this.endX - x * scale, this.endY - y * scale)
-    this.data.rectList.push(new Rect(sx, sy, ex, ey))
+    const offset = this.data.getOffset()
+    this.points = this.points.map(p => {
+      p.reverseScale(half, offset, scale)
+      return new Vector2(p.x, p.y)
+    })
+    this.data.rectList.push(new Rect(this.points))
     this.data.renderAll()
     this.data.persist()
+    this.points = []
+    this.startPoint = new Vector2()
+  }
+
+
+  private getRectPoints(v1: Vector2, v2: Vector2) {
+    return [v1, new Vector2(v2.x, v1.y), v2, new Vector2(v1.x, v2.y), v1]
   }
 
 }

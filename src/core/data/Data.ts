@@ -1,3 +1,4 @@
+import { Vector2 } from "../math/Vector2";
 import { Polylline } from "../shape/Polyline";
 import { Rect } from "../shape/Rect";
 
@@ -9,33 +10,34 @@ export class Data {
   private ctx: CanvasRenderingContext2D;
   private canvas: HTMLCanvasElement;
 
-  private offsetX = 0;
-  private offsetY = 0;
-
+  private offset: Vector2 = new Vector2()
   private scale = 1;
+
+  private half = new Vector2()
 
   constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
     this.ctx = ctx
     this.canvas = canvas
+    this.half.x = this.canvas.width / 2
+    this.half.y = this.canvas.height / 2
     const jsonString = localStorage.getItem("editor-data")
     if (jsonString) {
       const obj = JSON.parse(jsonString)
       Object.assign(this, obj)
+      this.rectList = this.rectList.map(e => new Rect(e.points))
+      this.polylineList = this.polylineList.map(e => new Rect(e.points))
       this.renderAll()
     }
   }
 
 
   getOffset() {
-    return {
-      x: this.offsetX,
-      y: this.offsetY
-    }
+    return this.offset
   }
 
   setOffset(x: number, y: number) {
-    this.offsetX = x
-    this.offsetY = y
+    this.offset.x = x
+    this.offset.y = y
     this.renderAll()
   }
 
@@ -47,24 +49,26 @@ export class Data {
 
   private renderRect(rect: Rect) {
     this.ctx.strokeStyle = "#333333"
-    this.ctx.lineWidth = 2 * this.scale
-    let startX = rect.startX + this.offsetX
-    let startY = rect.startY + this.offsetY
-    let width = rect.endX - rect.startX
-    let height = rect.endY - rect.startY
-    let { x: sx, y: sy } = this.computeScale(startX, startY)
-    this.ctx.strokeRect(sx, sy, width * this.scale, height * this.scale)
+    this.ctx.beginPath()
+    rect.points.forEach((v: Vector2, index: number) => {
+      v.computeScale(this.half, this.offset, this.scale)
+      index === 0 ? this.ctx.moveTo(v.x, v.y) : this.ctx.lineTo(v.x, v.y)
+    })
+    this.ctx.stroke()
   }
 
   private renderPolyline(polyline: Polylline) {
     this.ctx.beginPath();
-    this.ctx.moveTo(polyline.points[0], polyline.points[1]);
-    for (let i = 1; i < polyline.points.length / 2; i++) {
-      this.ctx.lineTo(polyline.points[i * 2], polyline.points[i * 2 + 1])
-    }
+    polyline.points.forEach((v: Vector2, index: number) => {
+      v.computeScale(this.half, this.offset, this.scale)
+      index === 0 ? this.ctx.moveTo(v.x, v.y) : this.ctx.lineTo(v.x, v.y)
+    })
     this.ctx.stroke()
   }
 
+  public getHalf() {
+    return this.half
+  }
 
   public getScale() {
     return this.scale
