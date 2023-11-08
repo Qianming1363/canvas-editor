@@ -1,4 +1,4 @@
-import { Data } from "../data/Data";
+import { Data } from "../data/DataManager";
 import { Vector2 } from "../math/Vector2";
 import { Rect } from "../shape/Rect";
 import { Tool } from "./Tool";

@@ -1,13 +1,13 @@
-import { Data } from "../data/Data";
+import { DataManager } from "../data/DataManager";
 
 export class DragControl {
   private startX = 0;
   private startY = 0;
   private isDrag = false
-  private data: Data;
+  private data: DataManager;
   private scale = 1;
 
-  constructor(data: Data) {
+  constructor(data: DataManager) {
     this.data = data
     this.initZoom()
   }

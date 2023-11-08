@@ -14,6 +14,11 @@ export class Rect {
     })
   }
 
+  public set(e: any) {
+    Object.assign(this, e)
+    return this
+  }
+
   render(ctx: CanvasRenderingContext2D, params: { half: Vector2, offset: Vector2, scale: number }) {
     ctx.strokeStyle = "#333333"
     ctx.beginPath()

@@ -1,4 +1,4 @@
-import { Data } from "../data/Data";
+import { Data } from "../data/DataManager";
 
 export class Tool {
   protected ctx: CanvasRenderingContext2D;

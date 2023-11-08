@@ -2,17 +2,31 @@
 import { Editor } from "./core/editor/Editor";
 import { onMounted, ref } from "vue"
 import { Mode } from "./core/editor/Mode";
+import { State } from "./core/data/DataManager";
 const canvas = ref<HTMLCanvasElement>()
 console.log(canvas)
 
 let editor: Editor;
 
-onMounted(() => {
+onMounted(async () => {
   const can = canvas.value as HTMLCanvasElement
   can.width = document.body.clientWidth
   can.height = document.body.clientHeight
   editor = new Editor(can)
+  const res = await getData()
+  editor.setData(res as State)
 })
+
+const getData = () => {
+  return new Promise((resolve, reject) => {
+    fetch("/data.json").then((res) => {
+      res.json().then(val => {
+        resolve(val)
+      }).catch(reject)
+    })
+  })
+
+}
 
 const clear = () => {
   editor.clear()

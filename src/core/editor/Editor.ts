@@ -1,5 +1,5 @@
+import { DataManager, State } from './../data/DataManager';
 import { DragControl } from "../control/DragControl"
-import { Data } from "../data/Data"
 import { PolylineDrawTool } from "../tools/PolylineDrawTool"
 import { RectDrawTool } from "../tools/RectDrawTool"
 import { Mode } from "./Mode"
@@ -10,7 +10,7 @@ export class Editor {
   private ctx: CanvasRenderingContext2D | null
 
   private rectDrawTool: RectDrawTool | undefined
-  private data: Data | undefined;
+  private dataManager: DataManager | undefined;
   private dragControl: DragControl | undefined
   private polylineDrawTool: PolylineDrawTool | undefined
 
@@ -20,10 +20,10 @@ export class Editor {
     this.canvas = canvas
     this.ctx = this.canvas.getContext("2d")
     if (this.ctx) {
-      this.data = new Data(this.ctx, this.canvas)
-      this.rectDrawTool = new RectDrawTool(this.ctx, this.canvas, this.data)
-      this.polylineDrawTool = new PolylineDrawTool(this.ctx, this.canvas, this.data)
-      this.dragControl = new DragControl(this.data)
+      this.dataManager = new DataManager(this.ctx, this.canvas)
+      this.rectDrawTool = new RectDrawTool(this.ctx, this.canvas, this.dataManager)
+      this.polylineDrawTool = new PolylineDrawTool(this.ctx, this.canvas, this.dataManager)
+      this.dragControl = new DragControl(this.dataManager)
       this.initMouseEvenet()
     }
   }
@@ -66,21 +66,20 @@ export class Editor {
     document.addEventListener("contextmenu", (e: MouseEvent) => {
       e.preventDefault()
     })
-
   }
 
-  clear() {
-    if (this.data) {
-      localStorage.setItem("editor-data", '')
-      this.data.rectList = []
-      this.data.polylineList = []
-      this.data.renderAll()
+  public setData(state: State) {
+    this.dataManager?.setState(state)
+  }
+
+  public clear() {
+    if (this.dataManager) {
+      this.dataManager.setState({} as State)
     }
   }
 
   public setDrawMode(mode: Mode) {
     this.mode = mode
-    console.log("设置mode为：", this.mode)
   }
 
 }

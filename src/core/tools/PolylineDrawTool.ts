@@ -1,5 +1,5 @@
 import { Tool } from "./Tool";
-import { Data } from "../data/Data";
+import { Data } from "../data/DataManager";
 import { Polylline } from "../shape/Polyline";
 import { Vector2 } from "../math/Vector2";
 
