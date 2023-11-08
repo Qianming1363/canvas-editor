@@ -29,7 +29,7 @@ export class Editor {
   }
 
   initMouseEvenet() {
-    document.body.addEventListener("mousedown", (e: MouseEvent) => {
+    this.canvas.addEventListener("mousedown", (e: MouseEvent) => {
       switch (this.mode) {
         case Mode.RECT:
           this.rectDrawTool?.mouseDown(e)
@@ -40,7 +40,7 @@ export class Editor {
       }
       this.dragControl?.mouseDown(e)
     })
-    document.body.addEventListener("mousemove", (e: MouseEvent) => {
+    this.canvas.addEventListener("mousemove", (e: MouseEvent) => {
       switch (this.mode) {
         case Mode.RECT:
           this.rectDrawTool?.mouseMove(e)
@@ -51,7 +51,7 @@ export class Editor {
       }
       this.dragControl?.mouseMove(e)
     })
-    document.body.addEventListener("mouseup", (e: MouseEvent) => {
+    this.canvas.addEventListener("mouseup", (e: MouseEvent) => {
       switch (this.mode) {
         case Mode.RECT:
           this.rectDrawTool?.mouseUp(e)

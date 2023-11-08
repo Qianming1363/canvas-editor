@@ -14,9 +14,9 @@ export class DragControl {
 
   initZoom() {
     document.addEventListener("wheel", (event: WheelEvent) => {
-      this.scale += (-event.deltaY / Math.abs(event.deltaY) * (0.02 + 0.1 * this.scale))
-      if (this.scale < 0.05) {
-        this.scale = 0.05
+      this.scale += (-event.deltaY / Math.abs(event.deltaY) * (0.001 + 0.05 * this.scale))
+      if (this.scale < 0.001) {
+        this.scale = 0.001
       } else if (this.scale > 2.5) {
         this.scale = 2.5
       }

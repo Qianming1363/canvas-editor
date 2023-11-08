@@ -2,6 +2,7 @@ import { Vector2 } from "../math/Vector2";
 import { Polylline } from "../shape/Polyline";
 import { Rect } from "../shape/Rect";
 
+
 export class Data {
 
   public rectList: Rect[] = []
@@ -25,7 +26,7 @@ export class Data {
       const obj = JSON.parse(jsonString)
       Object.assign(this, obj)
       this.rectList = this.rectList.map(e => new Rect(e.points))
-      this.polylineList = this.polylineList.map(e => new Rect(e.points))
+      this.polylineList = this.polylineList.map(e => new Polylline(e.points))
       this.renderAll()
     }
   }
@@ -43,28 +44,18 @@ export class Data {
 
   renderAll() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
-    this.rectList.forEach(this.renderRect.bind(this))
-    this.polylineList.forEach(this.renderPolyline.bind(this))
+    this.rectList.forEach(item => item.render(this.ctx, this.getViewParams()))
+    this.polylineList.forEach(item => item.render(this.ctx, this.getViewParams()))
   }
 
-  private renderRect(rect: Rect) {
-    this.ctx.strokeStyle = "#333333"
-    this.ctx.beginPath()
-    rect.points.forEach((v: Vector2, index: number) => {
-      v.computeScale(this.half, this.offset, this.scale)
-      index === 0 ? this.ctx.moveTo(v.x, v.y) : this.ctx.lineTo(v.x, v.y)
-    })
-    this.ctx.stroke()
+  public getViewParams() {
+    return {
+      half: this.half,
+      offset: this.offset,
+      scale: this.scale
+    }
   }
 
-  private renderPolyline(polyline: Polylline) {
-    this.ctx.beginPath();
-    polyline.points.forEach((v: Vector2, index: number) => {
-      v.computeScale(this.half, this.offset, this.scale)
-      index === 0 ? this.ctx.moveTo(v.x, v.y) : this.ctx.lineTo(v.x, v.y)
-    })
-    this.ctx.stroke()
-  }
 
   public getHalf() {
     return this.half
