@@ -7,6 +7,8 @@ export class Rect {
   private id = uuid()
   private type: ShapeType = ShapeType.RECT
 
+  private isActive = true;
+
   constructor(data: Vector2[] | BaseShape) {
     if (data instanceof Array) {
       this.points = data.map((e) => new Vector2(e.x, e.y))
@@ -17,13 +19,22 @@ export class Rect {
     }
   }
 
+  public active() {
+    this.isActive = true
+  }
+
+  public deactive() {
+    this.isActive = false
+  }
+
   public set(e: any) {
     Object.assign(this, e)
     return this
   }
 
   render(ctx: CanvasRenderingContext2D, params: { half: Vector2, offset: Vector2, scale: number }) {
-    ctx.strokeStyle = "#333333"
+    ctx.strokeStyle = this.isActive ? "#FF00FF" : "#333333"
+    ctx.lineWidth = this.isActive ? 2 : 1
     ctx.beginPath()
     const points = [...this.points, this.points[0]]
     points.forEach((v: Vector2, index: number) => {
