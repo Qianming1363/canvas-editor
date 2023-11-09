@@ -42,7 +42,7 @@ const switchMode = (mode: Mode) => {
   <div class="top-bar">
     <button @click="clear">清除</button>
     <button @click="editor.back">撤销</button>
-    <button @click="editor.cancelBack">取消</button>
+    <button @click="editor.cancelBack">还原</button>
     <button @click="switchMode(Mode.POLYLINE)">线段</button>
     <button @click="switchMode(Mode.RECT)">矩形</button>
     <button>多边形</button>
