@@ -5,7 +5,7 @@ export enum ShapeType {
 }
 
 export interface BaseShape {
-  id: number,
+  id: string,
   points: Array<{ x: number, y: number }>,
   type: ShapeType
 }

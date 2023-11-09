@@ -51,6 +51,13 @@ export class Vector2 {
     return [this.x, this.y]
   }
 
+  toJSON() {
+    return {
+      x: this.x,
+      y: this.y
+    }
+  }
+
   *[Symbol.iterator]() {
     yield this.x;
     yield this.y;

@@ -3,6 +3,8 @@ import { DragControl } from "../control/DragControl"
 import { PolylineDrawTool } from "../tools/PolylineDrawTool"
 import { RectDrawTool } from "../tools/RectDrawTool"
 import { Mode } from "./Mode"
+import { ActionRecord } from '../data/ActionRecord';
+import { EventName, on } from '../event/EventManager';
 
 export class Editor {
 
@@ -13,6 +15,7 @@ export class Editor {
   private dataManager: DataManager | undefined;
   private dragControl: DragControl | undefined
   private polylineDrawTool: PolylineDrawTool | undefined
+  private actionRecord: ActionRecord = new ActionRecord()
 
   private mode: Mode = Mode.BROWSE
 
@@ -25,6 +28,7 @@ export class Editor {
       this.polylineDrawTool = new PolylineDrawTool(this.ctx, this.canvas, this.dataManager)
       this.dragControl = new DragControl(this.dataManager)
       this.initMouseEvenet()
+      this.initEditorEvent()
     }
   }
 
@@ -68,18 +72,40 @@ export class Editor {
     })
   }
 
-  public setData(state: State) {
+  initEditorEvent() {
+    on(EventName.DrawEnd, () => {
+      const res = this.dataManager?.toJSON()
+      res && this.actionRecord.addRecord(res)
+    })
+  }
+
+  public setData(state: State, isSave = true) {
     this.dataManager?.setState(state)
+    isSave && this.actionRecord.addRecord(JSON.stringify(state))
   }
 
   public clear() {
     if (this.dataManager) {
-      this.dataManager.setState({} as State)
+      this.dataManager.clearState()
+      this.actionRecord.addRecord(this.dataManager.toJSON())
     }
   }
 
   public setDrawMode(mode: Mode) {
     this.mode = mode
   }
+
+
+  public back() {
+    const data = this.actionRecord.backRecord()
+    data && this.setData(JSON.parse(data), false)
+  }
+
+
+  public cancelBack() {
+    const data = this.actionRecord.cancelBackRecord()
+    data && this.setData(JSON.parse(data), false)
+  }
+
 
 }

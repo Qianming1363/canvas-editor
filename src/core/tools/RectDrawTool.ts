@@ -1,4 +1,5 @@
 import { Data } from "../data/DataManager";
+import { EventName, emit } from "../event/EventManager";
 import { Vector2 } from "../math/Vector2";
 import { Rect } from "../shape/Rect";
 import { Tool } from "./Tool";
@@ -54,11 +55,12 @@ export class RectDrawTool extends Tool {
       p.reverseScale(half, offset, scale)
       return new Vector2(p.x, p.y)
     })
-    this.data.rectList.push(new Rect(this.points))
+    this.data.addShape("rectList", new Rect(this.points))
     this.data.renderAll()
     this.data.persist()
     this.points = []
     this.startPoint = new Vector2()
+    emit(EventName.DrawEnd)
   }
 
 

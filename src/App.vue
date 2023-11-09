@@ -4,9 +4,8 @@ import { onMounted, ref } from "vue"
 import { Mode } from "./core/editor/Mode";
 import { State } from "./core/data/DataManager";
 const canvas = ref<HTMLCanvasElement>()
-console.log(canvas)
 
-let editor: Editor;
+var editor: Editor;
 
 onMounted(async () => {
   const can = canvas.value as HTMLCanvasElement
@@ -15,6 +14,7 @@ onMounted(async () => {
   editor = new Editor(can)
   const res = await getData()
   editor.setData(res as State)
+  window.editor = editor
 })
 
 const getData = () => {
@@ -41,8 +41,8 @@ const switchMode = (mode: Mode) => {
   <canvas class="canvas" ref="canvas"></canvas>
   <div class="top-bar">
     <button @click="clear">清除</button>
-    <button>撤销</button>
-    <button>取消</button>
+    <button @click="editor.back">撤销</button>
+    <button @click="editor.cancelBack">取消</button>
     <button @click="switchMode(Mode.POLYLINE)">线段</button>
     <button @click="switchMode(Mode.RECT)">矩形</button>
     <button>多边形</button>

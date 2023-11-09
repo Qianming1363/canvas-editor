@@ -1,9 +1,9 @@
-import { Data } from "../data/DataManager";
+import { DataManager } from "../data/DataManager";
 
 export class Tool {
   protected ctx: CanvasRenderingContext2D;
   protected canvas: HTMLCanvasElement;
-  protected data: Data;
+  protected data: DataManager;
   private img = new Image()
   constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, data: Data) {
     this.ctx = ctx

@@ -1,4 +1,5 @@
 import { Vector2 } from "../math/Vector2";
+import { BaseShape } from "../shape/BaseShape";
 import { Polylline } from "../shape/Polyline";
 import { Rect } from "../shape/Rect";
 
@@ -6,6 +7,9 @@ export interface State {
   rectList: Rect[],
   polylineList: Polylline[]
 }
+export type StateKey = keyof State
+
+
 
 export class DataManager {
 
@@ -29,8 +33,14 @@ export class DataManager {
   }
 
   setState(state: State) {
-    state.polylineList.map(e => new Polylline(e.points))
-    state.rectList.map(e => new Rect(e.points).set(e))
+    state.rectList = state.rectList.map(e => new Rect(e.points))
+    state.polylineList = state.polylineList.map(e => new Polylline(e.points))
+    this.state = state
+    this.renderAll()
+  }
+
+  public clearState() {
+    Object.keys(this.state).forEach((key) => this.state[key as StateKey] = [])
     this.renderAll()
   }
 
@@ -65,6 +75,10 @@ export class DataManager {
     }
   }
 
+  public addShape(key: StateKey, data: any) {
+    this.state[key].push(data)
+  }
+
   renderAll() {
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
     this.state.rectList.forEach(item => item.render(this.ctx, this.getViewParams()))
@@ -77,7 +91,11 @@ export class DataManager {
   }
 
   toJSON() {
-    // reconstruct
+    const data = Object.keys(this.state).reduce((pre: any, cur: any) => {
+      pre[cur] = this.state[cur as StateKey].map((e: any) => e.toJSON()) as BaseShape[]
+      return pre
+    }, {} as Record<StateKey, BaseShape[]>)
+    return JSON.stringify(data)
   }
 
 }

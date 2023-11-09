@@ -2,6 +2,7 @@ import { Tool } from "./Tool";
 import { Data } from "../data/DataManager";
 import { Polylline } from "../shape/Polyline";
 import { Vector2 } from "../math/Vector2";
+import { EventName, emit } from "../event/EventManager";
 
 
 export class PolylineDrawTool extends Tool {
@@ -57,17 +58,15 @@ export class PolylineDrawTool extends Tool {
         p.reverseScale(half, offset, scale)
         return new Vector2(p.x, p.y)
       })
-      this.data.polylineList.push(new Polylline(this.points))
+      this.data.addShape("polylineList", new Polylline(this.points))
       this.points = []
       this.data.renderAll()
       this.data.persist()
+      emit(EventName.DrawEnd)
       return
     }
     if (this.points.length !== 0) {
       this.points.push(new Vector2(e.clientX, e.clientY))
     }
   }
-
-
-
 }
