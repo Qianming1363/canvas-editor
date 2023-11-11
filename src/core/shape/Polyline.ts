@@ -20,6 +20,7 @@ export class Polylline {
 
 
   render(ctx: CanvasRenderingContext2D, params: { half: Vector2, offset: Vector2, scale: number }) {
+    ctx.lineWidth = 1
     ctx.strokeStyle = "#333333"
     ctx.beginPath()
     this.points.forEach((v: Vector2, index: number) => {

@@ -39,6 +39,10 @@ export class DataManager {
     this.renderAll()
   }
 
+  public getState() {
+    return this.state
+  }
+
   public clearState() {
     Object.keys(this.state).forEach((key) => this.state[key as StateKey] = [])
     this.renderAll()

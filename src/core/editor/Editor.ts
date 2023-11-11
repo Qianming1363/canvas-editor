@@ -5,7 +5,7 @@ import { RectDrawTool } from "../tools/RectDrawTool"
 import { Mode } from "./Mode"
 import { ActionRecord } from '../data/ActionRecord';
 import { EventName, on } from '../event/EventManager';
-
+import { Selector } from '../selector/Selector';
 export class Editor {
 
   private canvas: HTMLCanvasElement
@@ -17,6 +17,8 @@ export class Editor {
   private polylineDrawTool: PolylineDrawTool | undefined
   private actionRecord: ActionRecord = new ActionRecord()
 
+  private selector: Selector | undefined
+
   private mode: Mode = Mode.BROWSE
 
   constructor(canvas: HTMLCanvasElement) {
@@ -27,6 +29,7 @@ export class Editor {
       this.rectDrawTool = new RectDrawTool(this.ctx, this.canvas, this.dataManager)
       this.polylineDrawTool = new PolylineDrawTool(this.ctx, this.canvas, this.dataManager)
       this.dragControl = new DragControl(this.dataManager)
+      this.selector = new Selector(this.canvas, this.dataManager)
       this.initMouseEvenet()
       this.initEditorEvent()
     }
