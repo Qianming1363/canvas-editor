@@ -4,6 +4,7 @@ import { v4 as uuid } from "uuid"
 export class Rect {
 
   public points: Vector2[]
+  public controlPoints: Vector2[]
   private id = uuid()
   private type: ShapeType = ShapeType.RECT
 
@@ -42,6 +43,11 @@ export class Rect {
       index === 0 ? ctx.moveTo(v.x, v.y) : ctx.lineTo(v.x, v.y)
     })
     ctx.stroke()
+
+    if (this.isActive) {
+      // 绘制控制点
+    }
+
   }
 
 
@@ -52,5 +58,28 @@ export class Rect {
       type: this.type
     }
   }
+
+
+  setFrom13() {
+
+    // this.points[this]
+
+
+  }
+
+  setFrom24() {
+
+  }
+
+  // 计算控制点，激活的时候渲染
+  computeControlPoints() {
+
+  }
+
+  setPointsFromControlPoints() {
+
+  }
+
+
 
 }

@@ -31,6 +31,10 @@ export class Vector2 {
     this.y = this.py
   }
 
+  clone() {
+    return new Vector2(this.x, this.y)
+  }
+
   computeScale(half: Vector2, offset: Vector2, scale: number) {
     this.x = (this.px + offset.x - half.x) * scale + half.x
     this.y = (this.py + offset.y - half.y) * scale + half.y
