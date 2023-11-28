@@ -14,7 +14,7 @@ onMounted(async () => {
   editor = new Editor(can)
   const res = await getData()
   editor.setData(res as State)
-  window.editor = editor
+  // window.editor = editor
 })
 
 const getData = () => {

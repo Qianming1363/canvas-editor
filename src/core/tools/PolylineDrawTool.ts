@@ -1,5 +1,5 @@
 import { Tool } from "./Tool";
-import { Data } from "../data/DataManager";
+import { DataManager } from "../data/DataManager";
 import { Polylline } from "../shape/Polyline";
 import { Vector2 } from "../math/Vector2";
 import { EventName, emit } from "../event/EventManager";
@@ -12,7 +12,7 @@ export class PolylineDrawTool extends Tool {
   private currentY = 0;
   private isDrawing = false
 
-  constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, data: Data) {
+  constructor(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement, data: DataManager) {
     super(ctx, canvas, data)
   }
 
