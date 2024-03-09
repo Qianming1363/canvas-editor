@@ -8,7 +8,8 @@ export class Rect {
   private id = uuid()
   private type: ShapeType = ShapeType.RECT
 
-  private isActive = true;
+  private isActive = false;
+  private isSelected = false
 
   constructor(data: Vector2[] | BaseShape) {
     if (data instanceof Array) {
@@ -20,6 +21,10 @@ export class Rect {
     }
   }
 
+  public getIsActive() {
+    return this.isActive
+  }
+
   public active() {
     this.isActive = true
   }
@@ -28,14 +33,29 @@ export class Rect {
     this.isActive = false
   }
 
+  public getIsSelected() {
+    return this.isSelected
+  }
+
+  public select() {
+    this.isSelected = true
+  }
+
+  public unSelect() {
+    this.isSelected = false
+  }
+
   public set(e: any) {
     Object.assign(this, e)
     return this
   }
 
   render(ctx: CanvasRenderingContext2D, params: { half: Vector2, offset: Vector2, scale: number }) {
-    ctx.strokeStyle = this.isActive ? "#FF00FF" : "#333333"
-    ctx.lineWidth = this.isActive ? 2 : 1
+
+    const needActive = this.isActive || this.isSelected
+
+    ctx.strokeStyle = needActive ? "#FF00FF" : "#333333"
+    ctx.lineWidth = needActive ? 2 : 1
     ctx.beginPath()
     const points = [...this.points, this.points[0]]
     points.forEach((v: Vector2, index: number) => {
@@ -44,10 +64,14 @@ export class Rect {
     })
     ctx.stroke()
 
-    if (this.isActive) {
+    if (needActive) {
       // 绘制控制点
     }
 
+  }
+
+  click() {
+    
   }
 
 
@@ -73,7 +97,7 @@ export class Rect {
 
   // 计算控制点，激活的时候渲染
   computeControlPoints() {
-
+    
   }
 
   setPointsFromControlPoints() {

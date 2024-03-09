@@ -19,13 +19,31 @@ export class Selector {
 
   mouseMove(e: MouseEvent) {
     // const params = this.data.getViewParams()
-    this.currentPoint = new Vector2(e.clientX, e.clientY)//.computeScale(params.half, params.offset, params.scale)
+
+    //.computeScale(params.half, params.offset, params.scale)
+    this.currentPoint = new Vector2(e.clientX, e.clientY)
     const state = this.data.getState()
     const rectList = state.rectList
     const res = this.checkRect(rectList)
     if (res) {
       rectList.forEach(e => e.deactive())
       res.forEach(e => e.active())
+      this.data.renderAll()
+    }
+  }
+
+  checkClick(e: MouseEvent) {
+    this.currentPoint = new Vector2(e.clientX, e.clientY)
+    const state = this.data.getState()
+    const rectList = state.rectList
+    const res = this.checkRect(rectList)
+    // 只能选中一个
+    rectList.forEach(e => e.unSelect())
+
+    if (res && res.length === 1) {
+      if (res[0].getIsActive()) {
+        res[0].select()
+      }
       this.data.renderAll()
     }
   }

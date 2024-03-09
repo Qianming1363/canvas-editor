@@ -36,6 +36,12 @@ export class Editor {
   }
 
   initMouseEvenet() {
+
+    this.canvas.addEventListener("click", (e: MouseEvent) => {
+      // 点击触发选中状态  选择模式
+      this.selector?.checkClick(e)
+    })
+
     this.canvas.addEventListener("mousedown", (e: MouseEvent) => {
       switch (this.mode) {
         case Mode.RECT:
