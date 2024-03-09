@@ -30,6 +30,7 @@ export class Selector {
       res.forEach(e => e.active())
       this.data.renderAll()
     }
+    this.checkControlPoints(rectList.flatMap(e => e.controlPoints))
   }
 
   checkClick(e: MouseEvent) {
@@ -59,6 +60,16 @@ export class Selector {
         return true
       }
       return false
+    })
+  }
+
+  checkControlPoints(list: Vector2[]) {
+    document.documentElement.style.cursor = ""
+    list.forEach((v: Vector2) => {
+      // 控制点半径为6
+      if(v.distanceTo(this.currentPoint) < 6) {
+        document.documentElement.style.cursor = "pointer"
+      }
     })
   }
 

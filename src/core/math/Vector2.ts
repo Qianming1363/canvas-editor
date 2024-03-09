@@ -26,6 +26,12 @@ export class Vector2 {
     return this
   }
 
+  mut(n: number) {
+    this.x = this.x * n
+    this.y = this.y * n
+    return this;
+  }
+
   reset() {
     this.x = this.px
     this.y = this.py
@@ -33,6 +39,16 @@ export class Vector2 {
 
   clone() {
     return new Vector2(this.x, this.y)
+  }
+
+  clonePrimary() {
+    return new Vector2(this.px, this.py)
+  }
+
+  distanceTo(v: Vector2) {
+    const x = v.x - this.x
+    const y = v.y - this.y
+    return Math.sqrt(x*x + y*y)
   }
 
   computeScale(half: Vector2, offset: Vector2, scale: number) {

@@ -61,7 +61,7 @@ const switchMode = (mode: Mode) => {
 .top-bar {
   position: fixed;
   top: 18px;
-  width: 1000px;
+  width: 90vw;
   height: 64px;
   z-index: 10;
   box-shadow: rgba(0, 0, 0, 0.2) 0 0 10px;

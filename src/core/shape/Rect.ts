@@ -1,10 +1,17 @@
 import { Vector2 } from "../math/Vector2"
 import { BaseShape, ShapeType } from "./BaseShape"
 import { v4 as uuid } from "uuid"
+
+export interface Params { 
+  half: Vector2,
+  offset: Vector2,
+  scale: number
+}
+
 export class Rect {
 
   public points: Vector2[]
-  public controlPoints: Vector2[]
+  public controlPoints: Vector2[] = []
   private id = uuid()
   private type: ShapeType = ShapeType.RECT
 
@@ -64,8 +71,20 @@ export class Rect {
     })
     ctx.stroke()
 
-    if (needActive) {
+    if (this.isSelected) {
       // 绘制控制点
+      // 没有则计算，有则直接显示
+      if (this.controlPoints.length === 0) {
+        this.computeControlPoints(params)
+      }
+      // render points
+      this.controlPoints.forEach((p: Vector2) => {
+        p.computeScale(params.half, params.offset, params.scale)
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI)
+        ctx.fillStyle = 'red'
+        ctx.fill()
+      })
     }
 
   }
@@ -84,20 +103,19 @@ export class Rect {
   }
 
 
-  setFrom13() {
-
-    // this.points[this]
-
-
-  }
-
-  setFrom24() {
-
-  }
 
   // 计算控制点，激活的时候渲染
-  computeControlPoints() {
-    
+  computeControlPoints(params: Params) {
+    const res = []
+    for(let i = 0; i< this.points.length; i++) {
+      const cur = this.points[i];
+      const next = this.points[i + 1 >= this.points.length ? 0 : i+1];
+      res.push(cur.clonePrimary().reverseScale(params.half, params.offset, params.scale))
+      res.push(cur.clonePrimary().add(next.clonePrimary()).mut(0.5).clone().reverseScale(params.half, params.offset, params.scale))
+      // res.push(next.clone())
+    }
+    // 可能需要按照类型实例化
+    this.controlPoints = res
   }
 
   setPointsFromControlPoints() {
