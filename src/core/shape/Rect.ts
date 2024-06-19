@@ -72,12 +72,9 @@ export class Rect {
     ctx.stroke()
 
     if (this.isSelected) {
-      // 绘制控制点
-      // 没有则计算，有则直接显示
       if (this.controlPoints.length === 0) {
         this.computeControlPoints(params)
       }
-      // render points
       this.controlPoints.forEach((p: Vector2) => {
         p.computeScale(params.half, params.offset, params.scale)
         ctx.beginPath()

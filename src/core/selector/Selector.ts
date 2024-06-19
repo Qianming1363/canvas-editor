@@ -8,9 +8,17 @@ export class Selector {
   private data: DataManager;
   private currentPoint: Vector2 = new Vector2()
 
+  public hasSelectedPoint = false;
+  public activeShape: any;
+  public controlPoint: Vector2 = new Vector2()
+
+  public start = new Vector2()
+  public isDrag = false
+
   constructor(canvas: HTMLCanvasElement, data: DataManager) {
     this.data = data
     canvas.addEventListener("mousemove", (e: MouseEvent) => {
+      if(this.isDrag) return
       this.enable && this.mouseMove(e)
     })
   }
@@ -30,7 +38,7 @@ export class Selector {
       res.forEach(e => e.active())
       this.data.renderAll()
     }
-    this.checkControlPoints(rectList.flatMap(e => e.controlPoints))
+    this.checkControlPoints(rectList)
   }
 
   checkClick(e: MouseEvent) {
@@ -63,14 +71,23 @@ export class Selector {
     })
   }
 
-  checkControlPoints(list: Vector2[]) {
+  checkControlPoints(rectList: Rect[]) {
     document.documentElement.style.cursor = ""
-    list.forEach((v: Vector2) => {
-      // 控制点半径为6
-      if(v.distanceTo(this.currentPoint) < 6) {
-        document.documentElement.style.cursor = "pointer"
-      }
+    this.hasSelectedPoint = false
+
+    rectList.forEach((rect: Rect) => {
+      const list = rect.controlPoints
+      list.forEach((v: Vector2) => {
+        // 控制点半径为6
+        if(v.distanceTo(this.currentPoint) < 6) {
+          document.documentElement.style.cursor = "pointer"
+          this.hasSelectedPoint = true
+          this.activeShape = rect
+          this.controlPoint = v
+        }
+      })
     })
+
   }
 
   // 检测线段
@@ -81,6 +98,22 @@ export class Selector {
   // 检测多边形
   checkPolygon() {
 
+  }
+
+
+  dragStart(e: MouseEvent) {
+    this.isDrag = true
+    this.start = new Vector2(e.clientX, e.clientY)
+  }
+
+  dragMove(e: MouseEvent) {
+    this.activeShape.points[0] = new Vector2(e.clientX,e.clientY)
+    // this.activeShape.renderAll()
+    
+  }
+
+  dragEnd(e: MouseEvent) {
+    this.isDrag = false
   }
 
 }

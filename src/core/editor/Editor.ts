@@ -43,6 +43,12 @@ export class Editor {
     })
 
     this.canvas.addEventListener("mousedown", (e: MouseEvent) => {
+
+      if (this.selector?.hasSelectedPoint) {
+        this.selector.dragStart(e)
+        return
+      }
+
       switch (this.mode) {
         case Mode.RECT:
           this.rectDrawTool?.mouseDown(e)
@@ -54,6 +60,11 @@ export class Editor {
       this.dragControl?.mouseDown(e)
     })
     this.canvas.addEventListener("mousemove", (e: MouseEvent) => {
+      if (this.selector?.hasSelectedPoint  && this.selector.isDrag) {
+        this.selector.dragMove(e)
+        this.dataManager?.renderAll()
+        return
+      }
       switch (this.mode) {
         case Mode.RECT:
           this.rectDrawTool?.mouseMove(e)
@@ -65,6 +76,11 @@ export class Editor {
       this.dragControl?.mouseMove(e)
     })
     this.canvas.addEventListener("mouseup", (e: MouseEvent) => {
+      if (this.selector?.hasSelectedPoint) {
+        this.selector.dragEnd(e)
+        this.dataManager?.renderAll()
+        return
+      }
       switch (this.mode) {
         case Mode.RECT:
           this.rectDrawTool?.mouseUp(e)

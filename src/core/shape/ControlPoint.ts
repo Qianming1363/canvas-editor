@@ -3,8 +3,9 @@ import { Vector2 } from "../math/Vector2";
 export enum ControlPointType {
   FREE = "FREE",                // 可以自由拖动
   HORIZONTAL = "HORIZONTAL",    // 水平方向移动
-  VERTICAL = "VERTICAL",        // 熟知方向移动
-  ROTATION = "ROTATION"         // 旋转控制点 
+  VERTICAL = "VERTICAL",        // 竖直方向移动
+  ROTATION = "ROTATION",         // 旋转控制点 
+  CORNER = "CORNER"             // 顶点控制点
 }
 
 export class ControlPoint {
@@ -35,6 +36,4 @@ export class ControlPoint {
         break;
     }
   }
-
-
 }
